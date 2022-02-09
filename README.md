@@ -25,6 +25,10 @@ When a directory name is provided, all files in the directory are processed in o
 
 While technically optional, providing a custom mapping file provides better visualization of the different types of artifacts.
 
+The Neo4J database URL and credentials are hardcoded in DependencyLoader.java, defaults are localhost and neo4j/password.
+
+The default Neo4J credentials are <i>neo4j/password</i> and are hardcoded in DependencyLoader.java.
+
 # Notes
 Currently the Neo4J database is purged before each run.
 

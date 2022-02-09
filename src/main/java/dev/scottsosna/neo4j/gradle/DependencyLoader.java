@@ -49,7 +49,6 @@ public class DependencyLoader {
 
     //  Configuration info for connecting to the Neo4J database
     static private final String SERVER_URI = "bolt://localhost";
-//    static private final String SERVER_URI = "bolt+s://5925bb056e263d27a3033e33e71aa40d.neo4jsandbox.com:7687";
     static private final String SERVER_USERNAME = "neo4j";
     static private final String SERVER_PASSWORD = "password";
 

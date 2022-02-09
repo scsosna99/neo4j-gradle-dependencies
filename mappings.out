@@ -1,0 +1,11 @@
+# Format should be <partial-group-id>=<artifact-type>
+# More specific (longer, more parts) need to be before less specific or you'll never get
+# the more specific artifact type
+com.mrll.javelin=INTERNAL
+com.datasite=INTERNAL
+org.springframework.cloud=CLOUD
+org.springframework=SPRING
+io.pivotal.cloud=CLOUD
+io.pivotal.spring.cloud=SPRING
+org.apache=APACHE
+com.fasterxml.jackson=JACKSON

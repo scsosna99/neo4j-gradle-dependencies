@@ -48,27 +48,28 @@ public class DependencyLoader {
     private final SessionFactory sessionFactory;
 
     //  Configuration info for connecting to the Neo4J database
-    static private final String SERVER_URI = "bolt://localhost";
-    static private final String SERVER_USERNAME = "neo4j";
-    static private final String SERVER_PASSWORD = "password";
+    private static final String SERVER_URI = "bolt://localhost";
+    private static final String SERVER_USERNAME = "neo4j";
+    private static final String SERVER_PASSWORD = "password";
 
     //  Each level in gradle is prefixed with a character and 4 spaces, so always substring 5 characters for each
     //  level, either to go one dependency level deeper or to extract the artifact information
-    static private final int GRADLE_LEVEL_WIDTH = 5;
+    private static final int GRADLE_LEVEL_WIDTH = 5;
 
     //  Important Gradle Strings that we need to look for
-    static private final String ARTIFACT_SEPARATOR = ":";
-    static private final String GRADLE_CLASSPATH = "Classpath";
-    static private final String GRADLE_ARTIFACT_CURRENT_LEVEL = "+";
-    static private final String GRADLE_ARTIFACT_LAST_LEVEL = "\\";
-    static private final String GRADLE_ARTIFACT_NEXT_LEVEL = "|";
-    static private final String GRADLE_RESOLVED_INDICATION = "->";
-    static private final String GRADLE_ROOT_PROJECT = "Root project";
+    private static final String ARTIFACT_SEPARATOR = ":";
+    private static final String GRADLE_CLASSPATH = "Classpath";
+    private static final String GRADLE_ARTIFACT_CURRENT_LEVEL = "+";
+    private static final String GRADLE_ARTIFACT_LAST_LEVEL = "\\";
+    private static final String GRADLE_ARTIFACT_NEXT_LEVEL = "|";
+    private static final String GRADLE_PROJECT = "Project '";
+    private static final String GRADLE_RESOLVED_INDICATION = "->";
+    private static final String GRADLE_ROOT_PROJECT = "Root project '";
 
     //  Default artifact types that should always be present
-    static private final String ARTIFACT_TYPE_EXTERNAL = "EXTERNAL";
-    static private final String ARTIFACT_TYPE_INTERNAL = "INTERNAL";
-    static private final String ARTIFACT_TYPE_PROJECT = "PROJECT";
+    private static final String ARTIFACT_TYPE_EXTERNAL = "EXTERNAL";
+    private static final String ARTIFACT_TYPE_INTERNAL = "INTERNAL";
+    private static final String ARTIFACT_TYPE_PROJECT = "PROJECT";
 
     /**
      * Constructor
@@ -123,9 +124,6 @@ public class DependencyLoader {
         } else {
             System.out.println ("File or directory name required.");
         }
-
-
-        return;
     }
 
     /**
@@ -185,9 +183,14 @@ public class DependencyLoader {
         lines.stream().forEach (line -> {
             ResolutionType rt;
 
-            //  Try and extract "Root project" from the output
+            //  Try and extract "Root project" or "Project" from the output
             if (line.startsWith (GRADLE_ROOT_PROJECT)) {
-                String temp = line.substring(14, line.length() -1);
+                String temp = line.substring(GRADLE_ROOT_PROJECT.length(), line.length() -1);
+                projectName.set(temp);
+                stack.push(promoteOrCreateProject(temp, session));
+                return;
+            } else if (line.startsWith (GRADLE_PROJECT)) {
+                String temp = line.substring(GRADLE_PROJECT.length(), line.length() - 1);
                 projectName.set(temp);
                 stack.push(promoteOrCreateProject(temp, session));
                 return;
@@ -273,9 +276,6 @@ public class DependencyLoader {
             //  Push the new artifact on the stack.
             stack.push(dependee);
         });
-
-
-        return;
     }
 
 
@@ -293,10 +293,6 @@ public class DependencyLoader {
 
         //  If nothing else, the artifact is by default external.
         return ARTIFACT_TYPE_EXTERNAL;
-//        if (groupId.startsWith("com.mrll") || groupId.startsWith("com.datasite")) return ARTIFACT_TYPE_INTERNAL;
-//        else if (groupId.startsWith("org.springframework")) return "SPRING";
-//        else if (groupId.startsWith("org.apache")) return "APACHE";
-//        else return ARTIFACT_TYPE_EXTERNAL;
     }
 
 

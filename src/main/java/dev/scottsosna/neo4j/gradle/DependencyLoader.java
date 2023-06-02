@@ -508,8 +508,6 @@ public class DependencyLoader {
      */
     private void loadDefaultArtifactMapping() {
         List<String[]> mappings = new ArrayList<>();
-        mappings.add(new String[] {"com.mrll", ARTIFACT_TYPE_INTERNAL});
-        mappings.add(new String[] {"com.datasite", ARTIFACT_TYPE_INTERNAL});
         mappings.add(new String[] {"org.springframework", "SPRING"});
         mappings.add(new String[] {"io.pivotal", "SPRING"});
         mappings.add(new String[] {"org.apache", "APACHE"});
